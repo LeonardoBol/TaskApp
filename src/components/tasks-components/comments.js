@@ -1,6 +1,7 @@
 import { Comment, Avatar, Form, Button, List, Input } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const { TextArea } = Input;
 
@@ -13,13 +14,13 @@ const CommentList = ({ comments }) => (
     />
 );
 
-const Editor = ({ onChange, onSubmit, submitting, value }) => (
+const Editor = ({ onChange, onSubmit, submitting, value, onKeyPress }) => (
     <>
         <Form.Item>
             <TextArea rows={3} onChange={onChange} value={value} />
         </Form.Item>
         <Form.Item>
-            <Button htmlType="submit" loading={submitting} onClick={onSubmit} type="primary">
+            <Button htmlType="submit" onKeyPress={onKeyPress} loading={submitting} onClick={onSubmit} type="primary">
                 Comentar
             </Button>
         </Form.Item>
@@ -27,6 +28,8 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
 );
 
 const Comments = () => {
+
+    const {auth_user} = useSelector(state => state.usersReducer)
 
     const [comments, setComments] = useState([])
     const [submitting, setSubmmiting] = useState(false)
@@ -47,8 +50,8 @@ const Comments = () => {
             setComments([
                 ...comments,
                 {
-                    author: 'Han Solo',
-                    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+                    author: auth_user,
+                    avatar: 'http://localhost:5000/avatars/userIcon.png',
                     content: <p>{value}</p>,
                     datetime: moment().fromNow(),
                 }
@@ -62,7 +65,7 @@ const Comments = () => {
 
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
-            setValue(e.target.value)
+            handleSubmit(); 
         }
     }
 
@@ -74,12 +77,13 @@ const Comments = () => {
             <Comment
                 avatar={
                     <Avatar
-                        src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                        alt="Han Solo"
+                        src="http://localhost:5000/avatars/userIcon.png"
+                        alt={auth_user}
                     />
                 }
                 content={
                     <Editor
+                        onKeyPress={handleKeyPress}
                         onChange={handleChange}
                         onSubmit={handleSubmit}
                         submitting={submitting}

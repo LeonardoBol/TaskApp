@@ -126,7 +126,7 @@ const ModalTaskEditView = ({ visible, hide, data, defaultFileList }) => {
         dispatch(deleteAttachment(idEliminar));
         setTimeout(() => {
             dispatch(getAttachment())
-        }, 2000);        
+        }, 2000);
     }
 
     return (
@@ -138,9 +138,7 @@ const ModalTaskEditView = ({ visible, hide, data, defaultFileList }) => {
             onCancel={hide()}
             destroyOnClose={true}
             footer={[
-                <Button key="return" onClick={hide()}>
-                    Volver
-                </Button>,
+
             ]}
         >
             <Form
@@ -212,10 +210,16 @@ const ModalTaskEditView = ({ visible, hide, data, defaultFileList }) => {
                 <Divider />
                 <Row justify="end">
                     <Form.Item >
-                        <Button type="primary" htmlType="submit" loading={uploading} >
+                        <Button className='actualizarButton' type="primary" htmlType="submit" loading={uploading} >
                             Actualizar
                         </Button>
                     </Form.Item>
+                    <Form.Item >
+                        <Button key="return" onClick={hide()}>
+                            Volver
+                        </Button>
+                    </Form.Item>
+
                 </Row>
             </Form>
         </Modal>

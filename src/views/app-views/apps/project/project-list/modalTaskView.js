@@ -1,6 +1,5 @@
 import { Modal, Row, Col, Button, Tag, Divider, Form, Upload } from 'antd';
 import Attachments from 'components/tasks-components/attachments';
-import Comments from 'components/tasks-components/comments';
 import { useSelector } from 'react-redux';
 
 const priorityTags = priority => {
@@ -173,9 +172,9 @@ const ModalTaskView = ({ visible, hide, data, defaultFileList }) => {
                     </font>
                 </Row>
                 <Form.Item name='attachments' valuePropName='file' required={false} >
-                    <Upload disabled={true}  defaultFileList={datosIniciales}/>
+                    {datosIniciales.length == 0 ? "No hay archivos adjuntos " : <Upload disabled={true}  defaultFileList={datosIniciales}/>}
+                    
                 </Form.Item>
-                <Divider />
             </Modal>
         </>
     )

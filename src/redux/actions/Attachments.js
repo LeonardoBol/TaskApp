@@ -2,6 +2,9 @@ import {
     UPLOAD_ATTACHMENTS,
     UPLOAD_ATTACHMENTS_SUCCESS,
     UPLOAD_ATTACHMENTS_ERROR,
+    UPLOAD_ATTACHMENTS_CREATE,
+    UPLOAD_ATTACHMENTS_CREATE_SUCCESS,
+    UPLOAD_ATTACHMENTS_CREATE_ERROR,
     GET_ATTACHMENTS,
     GET_ATTACHMENTS_SUCCESS,
     GET_ATTACHMENTS_ERROR,
@@ -31,6 +34,25 @@ export const uploadAttachmentError = () => {
     }   
 };
 
+export const uploadAttachmentCreate = attachment => {
+    return {
+        type: UPLOAD_ATTACHMENTS_CREATE,
+        payload: attachment
+    }   
+};
+
+export const uploadAttachmentCreateSuccess = attachment => {
+    return {
+        type: UPLOAD_ATTACHMENTS_CREATE_SUCCESS,
+        payload: attachment
+    }   
+};
+
+export const uploadAttachmentCreateError = () => {
+    return {
+        type: UPLOAD_ATTACHMENTS_CREATE_ERROR,
+    }   
+};
 
 export const getAttachment = attachment => {
     return {

@@ -34,12 +34,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import 'assets/less/styles/tasks.css'
 import 'assets/less/styles/btn.css'
 
-
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
-
-
 
 const VIEW_LIST = 'LIST';
 const VIEW_GRID = 'GRID';
@@ -62,7 +59,6 @@ const ItemAction = ({ id, dataTask, removeId }) => {
 	const { id_auth_user } = useSelector(state => state.usersReducer);
 	const id_auth = { id_auth_user: id_auth_user };
 
-
 	const idSend = { id: dataTask.id }
 
 	//------- LISTA INICIAL DE ARCHIVOS ADJUNTOS -------
@@ -78,7 +74,6 @@ const ItemAction = ({ id, dataTask, removeId }) => {
 
 	//----------------------------
 	const DeleteTaskData = () => {
-
 
 		Modal.confirm({
 			title: 'Eliminar tarea',
@@ -129,8 +124,6 @@ const ItemAction = ({ id, dataTask, removeId }) => {
 	)
 }
 
-
-
 //		MOSTRAR NOMBRE Y ASUNTO ///////////////////////////
 const ItemHeader = ({ name, category }) => (
 	<div>
@@ -138,7 +131,6 @@ const ItemHeader = ({ name, category }) => (
 		<span className="text-muted">{category}</span>
 	</div>
 )
-
 
 //		MOSTRAR CANTIDAD DE ADJUNTOS DE LA TAREA
 //		MOSTRAR DIAS RESTANTES PARA ACABAR EL PLAZO
@@ -158,8 +150,6 @@ const ItemInfo = ({ statusColor, dayleft, priority, status, data }) => {
 	}
 	calcularCantidad();
 	//-------------
-
-
 
 	return (
 
@@ -184,7 +174,6 @@ const ItemInfo = ({ statusColor, dayleft, priority, status, data }) => {
 
 const CheckBox = ({ data }) => {
 
-	/* let checked = data.status_id == 3 ? true : false */
 	const [checked, setChecked] = useState(data.status_id == 3 ? true : false)
 	const dispatch = useDispatch()
 
@@ -195,7 +184,6 @@ const CheckBox = ({ data }) => {
 
 	const changeStatus = (e) => {
 		e.preventDefault();
-		/* checked = !checked; */
 		setChecked(() => !checked)
 		let estado = data.status_id
 
@@ -206,10 +194,7 @@ const CheckBox = ({ data }) => {
 			status: estado
 		}
 		dispatch(updateStatusTask(datos))
-
-
 		//-------------------------
-
 		let indexTask = 0;
 		indexTask = tasksFiltered.findIndex(e => e.id == data.id)
 
@@ -449,7 +434,6 @@ const ProjectList = () => {
 		tasks = e;
 	}
 
-
 	const paintCards = () => {
 
 		return (
@@ -503,7 +487,4 @@ const ProjectList = () => {
 	)
 }
 
-
 export default ProjectList;
-
-

@@ -2,11 +2,14 @@ import { all, takeLatest, put, fork, call } from 'redux-saga/effects';
 import {
     UPLOAD_ATTACHMENTS,
     GET_ATTACHMENTS,
-    DELETE_ATTACHMENTS
+    DELETE_ATTACHMENTS,
+    UPLOAD_ATTACHMENTS_CREATE
 } from 'redux/constants/Attachments'
 import {
    uploadAttachmentSuccess,
    uploadAttachmentError,
+   uploadAttachmentCreateSuccess,
+   uploadAttachmentCreateError,
    getAttachmentSuccess,
    getAttachmentError,
    deleteAttachmentSuccess,
@@ -43,6 +46,26 @@ export function* uploadAttachmentsSaga(action) {
 
 export function* uploadAttachmentsData() {
     yield takeLatest(UPLOAD_ATTACHMENTS, uploadAttachmentsSaga)
+}
+
+// POST CREATE ----------------------
+
+export function* uploadAttachmentsCreateSaga(action) {
+    const attachment = action.payload;
+    try {
+        console.log(attachment);
+        yield call(AttachmentsService.uploadAttachmentCreate, attachment)
+        yield put(uploadAttachmentCreateSuccess(attachment)) 
+    } catch (e) {
+        console.log("Ocurrio un error en Sagas Attachment: ", e)
+        yield put(uploadAttachmentCreateError())
+        openNotificationWithIcon('error', 'Operación fallida',
+        'Ocurrió un error al subir el adjunto');
+    }
+}
+
+export function* uploadAttachmentsCreateData() {
+    yield takeLatest(UPLOAD_ATTACHMENTS_CREATE, uploadAttachmentsCreateSaga)
 }
 
 // GET ---------------
@@ -85,6 +108,7 @@ export function* deleteAttachmentsData() {
 export default function* rootSaga() {
     yield all([
         fork(uploadAttachmentsData),
+        fork(uploadAttachmentsCreateData),
         fork(getAttachmentsData),
         fork(deleteAttachmentsData)
     ]);

@@ -10,19 +10,22 @@ import { UploadOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     createTask, getAttachment, getTasksList,
-    uploadAttachment, postFilteredTasks
+    uploadAttachmentCreate
 } from 'redux/actions';
 
 
 export default function ModalCreateTask({ visible, hide }) {
+
+
 
     // ---------------UTILS--------------
     const { RangePicker } = DatePicker
     const { TextArea } = Input
     const rules = [{ required: true, message: 'Campo Vacio', }]
     const dispatch = useDispatch();
-    const { uploading, tasks } = useSelector(state => state.tasksReducer);
+    const { uploading, loading, tasks } = useSelector(state => state.tasksReducer);
     const { users, id_auth_user } = useSelector(state => state.usersReducer);
+    const { loadingAtt } = useSelector(state => state.attachmentsReducer);
 
     // Traer lista de usuarios para seleccionar en el form
     const userlist = () => {
@@ -42,7 +45,7 @@ export default function ModalCreateTask({ visible, hide }) {
         }, 0);
     }
 
-    const onSubmit = (values) => {
+    const onSubmit = async (values) => {
 
         // Manejo de los archivos adjuntos
         const AttachmentUpload = new FormData();
@@ -52,7 +55,7 @@ export default function ModalCreateTask({ visible, hide }) {
                 AttachmentUpload.append('file', values.attachments.fileList[i].originFileObj);
             console.log(AttachmentUpload);
         }
-        dispatch(uploadAttachment(AttachmentUpload))
+
 
         //Parseo de fechas
         const convertValues = {
@@ -64,28 +67,30 @@ export default function ModalCreateTask({ visible, hide }) {
         // Actualización de la tarea
         const created_by = { created_by: id_auth_user };
         const task = { ...values, ...convertValues, ...created_by }
+        delete task.attachments;
         delete task.date;
         const id = { id_auth_user: id_auth_user };
+        //Mandarla a la DB
         dispatch(createTask(task));
-
-        /*let tasksMandar = [];
-
-        // VARIABLE PARA EL MANEJO DE LAS TAREAS QUE SE 
-            // ESTÁN MOSTRANDO (FILTROS)
-            for (let i = 0; i = tasksMandar.length; i++) {
-                tasksMandar.pop();
-            }
-            for (let i = 0; i < tasks.length; i++) {
-                tasksMandar.push(tasks[i]);
-            }
-            dispatch(postFilteredTasks(tasksMandar))*/
-
         setTimeout(() => {
-            dispatch(getAttachment())
-            dispatch(getTasksList(id))
-            hide();
+            cargarAttachment(AttachmentUpload);
+            setTimeout(() => {
+                do {
+                    if (!uploading) {
+                        dispatch(getAttachment());
+                        setTimeout(() => {
+                            if (!loadingAtt) {
+                                dispatch(getTasksList(id));
+                            }
+                        }, 500);
+                    }
+                } while (uploading == true)
+            }, 500);
         }, 2000);
+    }
 
+    const cargarAttachment = (attachment) => {
+        dispatch(uploadAttachmentCreate(attachment))
     }
 
     return (
@@ -147,6 +152,7 @@ export default function ModalCreateTask({ visible, hide }) {
                     <Form.Item label="Descripción" rules={rules} name="description">
                         <TextArea autoSize={{ minRows: 3, maxRows: 8 }} allowClear={true} />
                     </Form.Item>
+
                     <Divider />
                     <Row>
                         <font
@@ -155,12 +161,16 @@ export default function ModalCreateTask({ visible, hide }) {
                             Adjuntar archivos
                         </font>
                     </Row>
+
                     <Form.Item name='attachments' valuePropName='file' required={false} >
                         <Upload customRequest={dummyRequest} maxCount={5} multiple>
                             <Button loading={false} icon={<UploadOutlined />}>Subir</Button>
                         </Upload>
                     </Form.Item>
+
+
                     <Divider />
+
                     <Row justify="end">
                         <Form.Item >
                             <Button type="primary" loading={uploading} htmlType="submit">

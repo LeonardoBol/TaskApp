@@ -10,6 +10,13 @@ AttachmentsService.uploadAttachment = attachment => Axios({
     headers: {'Content-Type': 'multipart/form-data'}
 }).then(res => res).catch(err => err.response);
 
+AttachmentsService.uploadAttachmentCreate = attachment => Axios({
+    url: `/attachment`,
+    method: 'POST',
+    data: attachment,
+    headers: {'Content-Type': 'multipart/form-data'}
+}).then(res => res).catch(err => err.response);
+
 AttachmentsService.getAttachment = attachment => Axios({
     url: `/attachments`,
     method: 'GET',

@@ -35,8 +35,9 @@
 }
 
 .excelButton{
+    position: relative;
     margin-top: 2%;
-    margin-left: 85%;
+    margin-left: 1%;
     background-image: url('excel-icon.png') ;
 }
 
@@ -47,6 +48,10 @@ height: 200px;
 background: #FFFFFF;
 border: 2px solid #C4C4C4;
 box-sizing: border-box;
+}
+
+.actualizarButton{
+    margin-right: 15px;
 }
 
 .filterField{
